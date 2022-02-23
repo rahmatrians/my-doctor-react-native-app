@@ -12,5 +12,6 @@ import InputChat from '../components/molecules/InputChat';
 import UserProfile from './UserProfile';
 import UpdateProfile from './UpdateProfile';
 import DoctorProfile from './DoctorProfile/indes';
+import Loading from '../components/molecules/Loading';
 
-export { Splash, GetStarted, Login, Register, Doctor, Messages, Hospitals, ChooseDoctor, Chatting, ChatItem, InputChat, UserProfile, UpdateProfile, DoctorProfile }; 
+export { Splash, GetStarted, Login, Register, Doctor, Messages, Hospitals, ChooseDoctor, Chatting, ChatItem, InputChat, UserProfile, UpdateProfile, DoctorProfile, Loading }; 
