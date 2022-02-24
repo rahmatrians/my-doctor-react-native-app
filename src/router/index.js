@@ -20,7 +20,7 @@ const MainApp = () => {
 
 const Router = () => {
     return (
-        <Stack.Navigator initialRouteName="Register">
+        <Stack.Navigator initialRouteName="Splash">
             {/* <Stack.Navigator> */}
             <Stack.Screen name="Splash" component={Splash} options={{ headerShown: false }} />
             <Stack.Screen name="GetStarted" component={GetStarted} options={{ headerShown: false }} />
