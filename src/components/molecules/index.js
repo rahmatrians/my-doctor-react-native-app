@@ -8,5 +8,6 @@ import ListDoctor from "./ListDoctor";
 import ListHospital from "./ListHospital";
 import Profile from "./Profile";
 import ProfileItem from "./ProfileItem";
+import Loading from "./Loading";
 
-export { Header, BottomNavigator, HomeProfile, DoctorCategory, RatedDoctor, NewsItem, ListDoctor, ListHospital, Profile, ProfileItem }
+export { Header, BottomNavigator, HomeProfile, DoctorCategory, RatedDoctor, NewsItem, ListDoctor, ListHospital, Profile, ProfileItem, Loading }

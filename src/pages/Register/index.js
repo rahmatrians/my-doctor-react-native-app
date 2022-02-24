@@ -1,7 +1,7 @@
 import { ScrollView, StyleSheet, View } from 'react-native'
 import React, { useState } from 'react'
 import { Button, Gap, Header, Input, Loading } from '../../components';
-import { colors, useForm } from '../../utils';
+import { colors, getData, storeData, useForm } from '../../utils';
 import { db } from '../../config/Firebase'
 
 //Firebase
@@ -21,43 +21,45 @@ const Register = ({ navigation }) => {
 
     const [loading, setLoading] = useState(false);
 
-    const onContinue = async () => {
-        //push user data to firestore
-        // Add a new document in collection "cities"
-        await setDoc(doc(db, "ddd", "LA"), {
-            name: "Los Angeles",
-            state: "CA",
-            country: "USA"
-        });
+    const onContinue = () => {
+        setLoading(true);
+        console.log(form);
+        const auth = getAuth();
+        createUserWithEmailAndPassword(auth, form.email, form.password)
+            .then((userCredential) => {
+                setLoading(false);
+                setForm('reset');
+                // Signed in 
+                const user = userCredential.user;
 
+                //push user data to firestore
+                // Add a new document in collection "cities"
+                setDoc(doc(db, "users", user.uid), {
+                    fullName: form.fullName,
+                    profession: form.profession,
+                    email: form.email,
+                });
 
-        // setLoading(true);
-        // const auth = getAuth();
-        // createUserWithEmailAndPassword(auth, form.email, form.password)
-        //     .then((userCredential) => {
-        //         // Signed in 
-        //         const user = userCredential.user;
+                //save and get data to local storage
+                storeData('user', form);
+                getData('user').then((res) => console.log('res', res));
 
-
-        //         setLoading(false);
-        //         setForm('reset');
-        //         console.log('register success : ', userCredential);
-        //     })
-        //     .catch((error) => {
-        //         const errorCode = error.code;
-        //         const errorMessage = error.message;
-        //         setLoading(false);
-        //         showMessage({
-        //             message: errorCode,
-        //             description: errorMessage,
-        //             type: "success",
-        //             backgroundColor: colors.error,
-        //             color: colors.white,
-        //         });
-        //         console.log('error register : ', error);
-        //     });
-        // console.log(form);
-        // navigation.navigate('UploadPhoto');
+                console.log('register success : ', userCredential);
+                navigation.navigate('UploadPhoto');
+            })
+            .catch((error) => {
+                const errorCode = error.code;
+                const errorMessage = error.message;
+                setLoading(false);
+                showMessage({
+                    message: errorCode,
+                    description: errorMessage,
+                    type: "success",
+                    backgroundColor: colors.error,
+                    color: colors.white,
+                });
+                console.log('error register : ', error);
+            });
     }
 
     return (
