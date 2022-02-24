@@ -38,6 +38,7 @@ const Register = ({ navigation }) => {
                     fullName: form.fullName,
                     profession: form.profession,
                     email: form.email,
+                    uid: user.uid,
                 });
 
                 //save and get data to local storage
@@ -45,7 +46,12 @@ const Register = ({ navigation }) => {
                 getData('user').then((res) => console.log('res', res));
 
                 console.log('register success : ', userCredential);
-                navigation.navigate('UploadPhoto');
+                navigation.navigate('UploadPhoto', {
+                    fullName: form.fullName,
+                    profession: form.profession,
+                    email: form.email,
+                    uid: user.uid,
+                });
             })
             .catch((error) => {
                 const errorCode = error.code;

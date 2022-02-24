@@ -3,15 +3,26 @@ import React, { useState } from 'react'
 import { Button, Gap, Header, Link } from '../../components'
 import { IconAddPhoto, IconRemovePhoto, ILGetStarted, ILLogo, ILNullPhoto } from '../../assets'
 import { colors, fonts } from '../../utils'
-import { launchCamera, launchImageLibrary } from 'react-native-image-picker';
+import { launchImageLibrary } from 'react-native-image-picker';
 import { showMessage } from 'react-native-flash-message'
 
-const UploadPhoto = ({ navigation }) => {
+//Firebase
+import { db } from '../../config/Firebase'
+import { doc, updateDoc } from "firebase/firestore/lite";
+
+
+const UploadPhoto = ({ navigation, route }) => {
+    const { fullName, profession, uid } = route.params;
     const [hasPhoto, setHasPhoto] = useState(false);
+    const [photoForDB, setPhotoForDB] = useState('');
     const [photo, setPhoto] = useState({});
 
     const getImage = () => {
-        launchImageLibrary({}, (res) => {
+        const option = {
+            includeBase64: true
+        }
+
+        launchImageLibrary(option, (res) => {
             console.log('response:', res);
             if (res.didCancel || res.error) {
                 showMessage({
@@ -22,10 +33,18 @@ const UploadPhoto = ({ navigation }) => {
                 })
             } else {
                 const source = { uri: res.assets[0].uri };
+                setPhotoForDB(`data:${res.assets[0].type};base64, ${res.assets[0].base64}`);
                 setPhoto(source);
                 setHasPhoto(true);
             }
         });
+    }
+
+    const uploadAndContinue = async () => {
+        await updateDoc(doc(db, "users", uid), {
+            photo: photoForDB,
+        });
+        navigation.replace('MainApp');
     }
 
     return (
@@ -47,11 +66,11 @@ const UploadPhoto = ({ navigation }) => {
                             </>
                         )}
                     </TouchableOpacity>
-                    <Text style={styles.name}>Shayna Melinda</Text>
-                    <Text style={styles.profession}>Product Designer</Text>
+                    <Text style={styles.name}>{fullName}</Text>
+                    <Text style={styles.profession}>{profession}</Text>
                 </View>
                 <View>
-                    <Button title="Upload and Continue" disable={!hasPhoto} />
+                    <Button title="Upload and Continue" disable={!hasPhoto} onPress={uploadAndContinue} />
                     <Gap height={30} />
                     <Link title="Skip for this" align="center" size={16} onPress={() => navigation.replace('MainApp')} />
                 </View>
