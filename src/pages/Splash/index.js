@@ -3,10 +3,24 @@ import React, { useEffect } from 'react'
 import { ILLogo } from '../../assets'
 import { colors, fonts } from '../../utils';
 
+//fireabase
+import { getAuth, onAuthStateChanged } from "firebase/auth";
+
 const Splash = ({ navigation }) => {
     useEffect(() => {
         setTimeout(() => {
-            navigation.replace('GetStarted');
+
+            const auth = getAuth();
+            onAuthStateChanged(auth, (user) => {
+                if (user) {
+                    // User is signed in, see docs for a list of available properties
+                    navigation.replace('MainApp');
+                    // ...
+                } else {
+                    // User is signed out
+                    navigation.replace('GetStarted');
+                }
+            });
         }, 3000);
     }, []);
 

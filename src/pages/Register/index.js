@@ -60,7 +60,7 @@ const Register = ({ navigation }) => {
                 showMessage({
                     message: errorCode,
                     description: errorMessage,
-                    type: "success",
+                    type: "default",
                     backgroundColor: colors.error,
                     color: colors.white,
                 });

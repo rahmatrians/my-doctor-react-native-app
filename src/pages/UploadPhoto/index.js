@@ -2,7 +2,7 @@ import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import React, { useState } from 'react'
 import { Button, Gap, Header, Link } from '../../components'
 import { IconAddPhoto, IconRemovePhoto, ILGetStarted, ILLogo, ILNullPhoto } from '../../assets'
-import { colors, fonts } from '../../utils'
+import { colors, fonts, storeData } from '../../utils'
 import { launchImageLibrary } from 'react-native-image-picker';
 import { showMessage } from 'react-native-flash-message'
 
@@ -19,7 +19,10 @@ const UploadPhoto = ({ navigation, route }) => {
 
     const getImage = () => {
         const option = {
-            includeBase64: true
+            maxWidth: 200,
+            maxHeight: 200,
+            quality: 0.6,
+            includeBase64: true,
         }
 
         launchImageLibrary(option, (res) => {
@@ -44,6 +47,11 @@ const UploadPhoto = ({ navigation, route }) => {
         await updateDoc(doc(db, "users", uid), {
             photo: photoForDB,
         });
+
+        const data = route.params;
+        data.photo = photoForDB;
+        storeData('user', data);
+
         navigation.replace('MainApp');
     }
 
